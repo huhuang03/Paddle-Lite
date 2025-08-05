@@ -115,7 +115,15 @@ function set_benchmark_options {
 }
 #####################################################################################################
 
-
+function setup_ndk {
+  if [ "$NDK_ROOT" ]; then
+      NDK_VERSION=$(echo $NDK_ROOT | egrep -o "[0-9]{2}")
+      if [ "$NDK_VERSION" -gt 17 ]; then
+          TOOLCHAIN=clang
+      fi
+  fi
+  echo "$TOOLCHAIN"
+}
 
 
 
@@ -225,13 +233,7 @@ function make_tiny_publish_so {
       TOOLCHAIN=clang
   fi
 
-  if [ "$NDK_ROOT" ]; then
-      NDK_NAME=$(echo $NDK_ROOT | egrep -o "android-ndk-r[0-9]{2}")
-      NDK_VERSION=$(echo $NDK_NAME | egrep -o "[0-9]{2}")
-      if [ "$NDK_VERSION" -gt 17 ]; then
-          TOOLCHAIN=clang
-      fi
-  fi
+  TOOLCHAIN=$(setup_ndk)
 
   # android api level for android version
   set_android_api_level
@@ -321,13 +323,7 @@ function make_full_publish_so {
       TOOLCHAIN=clang
   fi
 
-  if [ "$NDK_ROOT" ]; then
-      NDK_NAME=$(echo $NDK_ROOT | egrep -o "android-ndk-r[0-9]{2}")
-      NDK_VERSION=$(echo $NDK_NAME | egrep -o "[0-9]{2}")
-      if [ "$NDK_VERSION" -gt 17 ]; then
-          TOOLCHAIN=clang
-      fi
-  fi
+  TOOLCHAIN=$(setup_ndk)
 
   # android api level for android version
   set_android_api_level
