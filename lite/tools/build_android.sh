@@ -237,6 +237,8 @@ function make_tiny_publish_so {
   # android api level for android version
   set_android_api_level
 
+  echo "TOOLCHAIN=$TOOLCHAIN"
+
   local cmake_mutable_options="
       -DLITE_BUILD_EXTRA=$WITH_EXTRA \
       -DLITE_WITH_LOG=$WITH_LOG \
