@@ -45,55 +45,30 @@ struct VectorTraits<T, Flatbuffers> {
 };
 
 struct FBSStrIterator {
-  typedef flatbuffers::VectorIterator<
-      flatbuffers::Offset<flatbuffers::String>,
-      typename flatbuffers::IndirectHelper<
-          flatbuffers::Offset<flatbuffers::String>>::return_type>
-      VI;
+  using iterator_type = flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>::const_iterator;
 
   FBSStrIterator() = default;
-  explicit FBSStrIterator(const VI& iter) { iter_ = iter; }
-  const VI& raw_iter() const { return iter_; }
+  explicit FBSStrIterator(const iterator_type& iter) : iter_(iter) {}
 
-  bool operator==(const FBSStrIterator& other) const {
-    return iter_ == other.raw_iter();
-  }
+  const iterator_type& raw_iter() const { return iter_; }
 
-  bool operator<(const FBSStrIterator& other) const {
-    return iter_ < other.raw_iter();
-  }
+  bool operator==(const FBSStrIterator& other) const { return iter_ == other.iter_; }
+  bool operator!=(const FBSStrIterator& other) const { return iter_ != other.iter_; }
+  bool operator<(const FBSStrIterator& other) const { return iter_ < other.iter_; }
 
-  bool operator!=(const FBSStrIterator& other) const {
-    return iter_ != other.raw_iter();
-  }
-
-  ptrdiff_t operator-(const FBSStrIterator& other) const {
-    return iter_ - other.raw_iter();
-  }
+  ptrdiff_t operator-(const FBSStrIterator& other) const { return iter_ - other.iter_; }
 
   std::string operator*() const { return iter_.operator*()->str(); }
   std::string operator->() const { return iter_.operator->()->str(); }
 
-  FBSStrIterator& operator++() {
-    iter_++;
-    return *this;
-  }
+  FBSStrIterator& operator++() { ++iter_; return *this; }
+  FBSStrIterator& operator--() { --iter_; return *this; }
 
-  FBSStrIterator& operator--() {
-    iter_--;
-    return *this;
-  }
-
-  FBSStrIterator operator+(const size_t& offset) {
-    return FBSStrIterator(iter_ + offset);
-  }
-
-  FBSStrIterator operator-(const size_t& offset) {
-    return FBSStrIterator(iter_ - offset);
-  }
+  FBSStrIterator operator+(const size_t& offset) const { return FBSStrIterator(iter_ + offset); }
+  FBSStrIterator operator-(const size_t& offset) const { return FBSStrIterator(iter_ - offset); }
 
  private:
-  VI iter_;
+  iterator_type iter_;
 };
 
 }  // namespace vector_view
