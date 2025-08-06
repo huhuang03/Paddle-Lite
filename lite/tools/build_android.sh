@@ -117,7 +117,7 @@ function set_benchmark_options {
 
 function setup_ndk {
   if [ "$NDK_ROOT" ]; then
-      NDK_VERSION=$(echo $NDK_ROOT | egrep -o "[0-9]{2}")
+      NDK_VERSION=$(echo $NDK_ROOT | egrep -o "[0-9]{2}" | head -n 1)
       if [ "$NDK_VERSION" -gt 17 ]; then
           TOOLCHAIN=clang
       fi
@@ -207,7 +207,6 @@ function set_android_api_level {
 # 4.1 function of tiny_publish compiling
 # here we only compile light_api lib
 function make_tiny_publish_so {
-
   if [ ! -d third-party ]; then
      git checkout third-party
   fi
