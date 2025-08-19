@@ -115,7 +115,15 @@ function set_benchmark_options {
 }
 #####################################################################################################
 
-
+function setup_ndk {
+  if [ "$NDK_ROOT" ]; then
+      NDK_VERSION=$(echo $NDK_ROOT | egrep -o "[0-9]{2}" | head -n 1)
+      if [ "$NDK_VERSION" -gt 17 ]; then
+          TOOLCHAIN=clang
+      fi
+  fi
+  echo "$TOOLCHAIN"
+}
 
 
 
@@ -199,7 +207,6 @@ function set_android_api_level {
 # 4.1 function of tiny_publish compiling
 # here we only compile light_api lib
 function make_tiny_publish_so {
-
   if [ ! -d third-party ]; then
      git checkout third-party
   fi
@@ -225,16 +232,12 @@ function make_tiny_publish_so {
       TOOLCHAIN=clang
   fi
 
-  if [ "$NDK_ROOT" ]; then
-      NDK_NAME=$(echo $NDK_ROOT | egrep -o "android-ndk-r[0-9]{2}")
-      NDK_VERSION=$(echo $NDK_NAME | egrep -o "[0-9]{2}")
-      if [ "$NDK_VERSION" -gt 17 ]; then
-          TOOLCHAIN=clang
-      fi
-  fi
+  TOOLCHAIN=$(setup_ndk)
 
   # android api level for android version
   set_android_api_level
+
+  echo "TOOLCHAIN=$TOOLCHAIN"
 
   local cmake_mutable_options="
       -DLITE_BUILD_EXTRA=$WITH_EXTRA \
@@ -321,13 +324,7 @@ function make_full_publish_so {
       TOOLCHAIN=clang
   fi
 
-  if [ "$NDK_ROOT" ]; then
-      NDK_NAME=$(echo $NDK_ROOT | egrep -o "android-ndk-r[0-9]{2}")
-      NDK_VERSION=$(echo $NDK_NAME | egrep -o "[0-9]{2}")
-      if [ "$NDK_VERSION" -gt 17 ]; then
-          TOOLCHAIN=clang
-      fi
-  fi
+  TOOLCHAIN=$(setup_ndk)
 
   # android api level for android version
   set_android_api_level

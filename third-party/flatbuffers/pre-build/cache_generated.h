@@ -6,6 +6,13 @@
 
 #include "flatbuffers/flatbuffers.h"
 
+// Ensure the included flatbuffers.h is the same version as when this file was
+// generated, otherwise it may not be compatible.
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 2 &&
+              FLATBUFFERS_VERSION_REVISION == 10,
+             "Non-compatible flatbuffers version included");
+
 namespace paddle {
 namespace lite {
 namespace fbs {
@@ -40,22 +47,266 @@ bool operator!=(const CacheT &lhs, const CacheT &rhs);
 
 namespace Cache_ {
 
-inline const flatbuffers::TypeTable *BinaryVectorTypeTable();
+inline const ::flatbuffers::TypeTable *BinaryVectorTypeTable();
 
-inline const flatbuffers::TypeTable *BinaryPairTypeTable();
+inline const ::flatbuffers::TypeTable *BinaryPairTypeTable();
 
 }  // namespace Cache_
 
-inline const flatbuffers::TypeTable *CacheTypeTable();
+inline const ::flatbuffers::TypeTable *CacheTypeTable();
 
 namespace Cache_ {
 
-struct BinaryVectorT : public flatbuffers::NativeTable {
+struct BinaryVectorT : public ::flatbuffers::NativeTable {
   typedef BinaryVector TableType;
-  std::vector<uint8_t> data;
-  BinaryVectorT() {
+  std::vector<uint8_t> data{};
+};
+
+struct BinaryVector FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef BinaryVectorT NativeTableType;
+  typedef BinaryVectorBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return BinaryVectorTypeTable();
+  }
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DATA = 4
+  };
+  const ::flatbuffers::Vector<uint8_t> *data() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_DATA);
+  }
+  ::flatbuffers::Vector<uint8_t> *mutable_data() {
+    return GetPointer<::flatbuffers::Vector<uint8_t> *>(VT_DATA);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_DATA) &&
+           verifier.VerifyVector(data()) &&
+           verifier.EndTable();
+  }
+  BinaryVectorT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(BinaryVectorT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<BinaryVector> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+};
+
+struct BinaryVectorBuilder {
+  typedef BinaryVector Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_data(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> data) {
+    fbb_.AddOffset(BinaryVector::VT_DATA, data);
+  }
+  explicit BinaryVectorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<BinaryVector> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<BinaryVector>(end);
+    return o;
   }
 };
+
+inline ::flatbuffers::Offset<BinaryVector> CreateBinaryVector(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> data = 0) {
+  BinaryVectorBuilder builder_(_fbb);
+  builder_.add_data(data);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<BinaryVector> CreateBinaryVectorDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<uint8_t> *data = nullptr) {
+  auto data__ = data ? _fbb.CreateVector<uint8_t>(*data) : 0;
+  return paddle::lite::fbs::opencl::proto::Cache_::CreateBinaryVector(
+      _fbb,
+      data__);
+}
+
+::flatbuffers::Offset<BinaryVector> CreateBinaryVector(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+struct BinaryPairT : public ::flatbuffers::NativeTable {
+  typedef BinaryPair TableType;
+  std::string key{};
+  std::vector<std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT>> value{};
+  BinaryPairT() = default;
+  BinaryPairT(const BinaryPairT &o);
+  BinaryPairT(BinaryPairT&&) FLATBUFFERS_NOEXCEPT = default;
+  BinaryPairT &operator=(BinaryPairT o) FLATBUFFERS_NOEXCEPT;
+};
+
+struct BinaryPair FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef BinaryPairT NativeTableType;
+  typedef BinaryPairBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return BinaryPairTypeTable();
+  }
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KEY = 4,
+    VT_VALUE = 6
+  };
+  const ::flatbuffers::String *key() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEY);
+  }
+  ::flatbuffers::String *mutable_key() {
+    return GetPointer<::flatbuffers::String *>(VT_KEY);
+  }
+  bool KeyCompareLessThan(const BinaryPair * const o) const {
+    return *key() < *o->key();
+  }
+  int KeyCompareWithValue(const char *_key) const {
+    return strcmp(key()->c_str(), _key);
+  }
+  template<typename StringType>
+  int KeyCompareWithValue(const StringType& _key) const {
+    if (key()->c_str() < _key) return -1;
+    if (_key < key()->c_str()) return 1;
+    return 0;
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *value() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *>(VT_VALUE);
+  }
+  ::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *mutable_value() {
+    return GetPointer<::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *>(VT_VALUE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_KEY) &&
+           verifier.VerifyString(key()) &&
+           VerifyOffset(verifier, VT_VALUE) &&
+           verifier.VerifyVector(value()) &&
+           verifier.VerifyVectorOfTables(value()) &&
+           verifier.EndTable();
+  }
+  BinaryPairT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(BinaryPairT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<BinaryPair> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+};
+
+struct BinaryPairBuilder {
+  typedef BinaryPair Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_key(::flatbuffers::Offset<::flatbuffers::String> key) {
+    fbb_.AddOffset(BinaryPair::VT_KEY, key);
+  }
+  void add_value(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>>> value) {
+    fbb_.AddOffset(BinaryPair::VT_VALUE, value);
+  }
+  explicit BinaryPairBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<BinaryPair> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<BinaryPair>(end);
+    fbb_.Required(o, BinaryPair::VT_KEY);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<BinaryPair> CreateBinaryPair(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> key = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>>> value = 0) {
+  BinaryPairBuilder builder_(_fbb);
+  builder_.add_value(value);
+  builder_.add_key(key);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<BinaryPair> CreateBinaryPairDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *key = nullptr,
+    const std::vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *value = nullptr) {
+  auto key__ = key ? _fbb.CreateString(key) : 0;
+  auto value__ = value ? _fbb.CreateVector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>>(*value) : 0;
+  return paddle::lite::fbs::opencl::proto::Cache_::CreateBinaryPair(
+      _fbb,
+      key__,
+      value__);
+}
+
+::flatbuffers::Offset<BinaryPair> CreateBinaryPair(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+}  // namespace Cache_
+
+struct CacheT : public ::flatbuffers::NativeTable {
+  typedef Cache TableType;
+  std::vector<std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT>> binary_map{};
+  CacheT() = default;
+  CacheT(const CacheT &o);
+  CacheT(CacheT&&) FLATBUFFERS_NOEXCEPT = default;
+  CacheT &operator=(CacheT o) FLATBUFFERS_NOEXCEPT;
+};
+
+struct Cache FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CacheT NativeTableType;
+  typedef CacheBuilder Builder;
+  static const ::flatbuffers::TypeTable *MiniReflectTypeTable() {
+    return CacheTypeTable();
+  }
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_BINARY_MAP = 4
+  };
+  const ::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *binary_map() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *>(VT_BINARY_MAP);
+  }
+  ::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *mutable_binary_map() {
+    return GetPointer<::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *>(VT_BINARY_MAP);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_BINARY_MAP) &&
+           verifier.VerifyVector(binary_map()) &&
+           verifier.VerifyVectorOfTables(binary_map()) &&
+           verifier.EndTable();
+  }
+  CacheT *UnPack(const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  void UnPackTo(CacheT *_o, const ::flatbuffers::resolver_function_t *_resolver = nullptr) const;
+  static ::flatbuffers::Offset<Cache> Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CacheT* _o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+};
+
+struct CacheBuilder {
+  typedef Cache Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_binary_map(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>>> binary_map) {
+    fbb_.AddOffset(Cache::VT_BINARY_MAP, binary_map);
+  }
+  explicit CacheBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<Cache> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<Cache>(end);
+    fbb_.Required(o, Cache::VT_BINARY_MAP);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<Cache> CreateCache(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>>> binary_map = 0) {
+  CacheBuilder builder_(_fbb);
+  builder_.add_binary_map(binary_map);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<Cache> CreateCacheDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    std::vector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *binary_map = nullptr) {
+  auto binary_map__ = binary_map ? _fbb.CreateVectorOfSortedTables<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>(binary_map) : 0;
+  return paddle::lite::fbs::opencl::proto::CreateCache(
+      _fbb,
+      binary_map__);
+}
+
+::flatbuffers::Offset<Cache> CreateCache(::flatbuffers::FlatBufferBuilder &_fbb, const CacheT *_o, const ::flatbuffers::rehasher_function_t *_rehasher = nullptr);
+
+namespace Cache_ {
+
 
 inline bool operator==(const BinaryVectorT &lhs, const BinaryVectorT &rhs) {
   return
@@ -67,82 +318,37 @@ inline bool operator!=(const BinaryVectorT &lhs, const BinaryVectorT &rhs) {
 }
 
 
-struct BinaryVector FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef BinaryVectorT NativeTableType;
-  typedef BinaryVectorBuilder Builder;
-  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return BinaryVectorTypeTable();
-  }
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_DATA = 4
-  };
-  const flatbuffers::Vector<uint8_t> *data() const {
-    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_DATA);
-  }
-  flatbuffers::Vector<uint8_t> *mutable_data() {
-    return GetPointer<flatbuffers::Vector<uint8_t> *>(VT_DATA);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_DATA) &&
-           verifier.VerifyVector(data()) &&
-           verifier.EndTable();
-  }
-  BinaryVectorT *UnPack(const flatbuffers::resolver_function_t *_resolver = nullptr) const;
-  void UnPackTo(BinaryVectorT *_o, const flatbuffers::resolver_function_t *_resolver = nullptr) const;
-  static flatbuffers::Offset<BinaryVector> Pack(flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT* _o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
-};
-
-struct BinaryVectorBuilder {
-  typedef BinaryVector Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_data(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> data) {
-    fbb_.AddOffset(BinaryVector::VT_DATA, data);
-  }
-  explicit BinaryVectorBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  BinaryVectorBuilder &operator=(const BinaryVectorBuilder &);
-  flatbuffers::Offset<BinaryVector> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<BinaryVector>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<BinaryVector> CreateBinaryVector(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> data = 0) {
-  BinaryVectorBuilder builder_(_fbb);
-  builder_.add_data(data);
-  return builder_.Finish();
+inline BinaryVectorT *BinaryVector::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<BinaryVectorT>(new BinaryVectorT());
+  UnPackTo(_o.get(), _resolver);
+  return _o.release();
 }
 
-inline flatbuffers::Offset<BinaryVector> CreateBinaryVectorDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<uint8_t> *data = nullptr) {
-  auto data__ = data ? _fbb.CreateVector<uint8_t>(*data) : 0;
+inline void BinaryVector::UnPackTo(BinaryVectorT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
+  (void)_o;
+  (void)_resolver;
+  { auto _e = data(); if (_e) { _o->data.resize(_e->size()); std::copy(_e->begin(), _e->end(), _o->data.begin()); } }
+}
+
+inline ::flatbuffers::Offset<BinaryVector> BinaryVector::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  return CreateBinaryVector(_fbb, _o, _rehasher);
+}
+
+inline ::flatbuffers::Offset<BinaryVector> CreateBinaryVector(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
+  (void)_rehasher;
+  (void)_o;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const BinaryVectorT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _data = _fbb.CreateVector(_o->data);
   return paddle::lite::fbs::opencl::proto::Cache_::CreateBinaryVector(
       _fbb,
-      data__);
+      _data);
 }
 
-flatbuffers::Offset<BinaryVector> CreateBinaryVector(flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT *_o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
-
-struct BinaryPairT : public flatbuffers::NativeTable {
-  typedef BinaryPair TableType;
-  std::string key;
-  std::vector<std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT>> value;
-  BinaryPairT() {
-  }
-};
 
 inline bool operator==(const BinaryPairT &lhs, const BinaryPairT &rhs) {
   return
       (lhs.key == rhs.key) &&
-      (lhs.value == rhs.value);
+      (lhs.value.size() == rhs.value.size() && std::equal(lhs.value.cbegin(), lhs.value.cend(), rhs.value.cbegin(), [](std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT> const &a, std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT> const &b) { return (a == b) || (a && b && *a == *b); }));
 }
 
 inline bool operator!=(const BinaryPairT &lhs, const BinaryPairT &rhs) {
@@ -150,231 +356,41 @@ inline bool operator!=(const BinaryPairT &lhs, const BinaryPairT &rhs) {
 }
 
 
-struct BinaryPair FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef BinaryPairT NativeTableType;
-  typedef BinaryPairBuilder Builder;
-  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return BinaryPairTypeTable();
-  }
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_KEY = 4,
-    VT_VALUE = 6
-  };
-  const flatbuffers::String *key() const {
-    return GetPointer<const flatbuffers::String *>(VT_KEY);
-  }
-  flatbuffers::String *mutable_key() {
-    return GetPointer<flatbuffers::String *>(VT_KEY);
-  }
-  bool KeyCompareLessThan(const BinaryPair *o) const {
-    return *key() < *o->key();
-  }
-  int KeyCompareWithValue(const char *val) const {
-    return strcmp(key()->c_str(), val);
-  }
-  const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *value() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *>(VT_VALUE);
-  }
-  flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *mutable_value() {
-    return GetPointer<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *>(VT_VALUE);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffsetRequired(verifier, VT_KEY) &&
-           verifier.VerifyString(key()) &&
-           VerifyOffset(verifier, VT_VALUE) &&
-           verifier.VerifyVector(value()) &&
-           verifier.VerifyVectorOfTables(value()) &&
-           verifier.EndTable();
-  }
-  BinaryPairT *UnPack(const flatbuffers::resolver_function_t *_resolver = nullptr) const;
-  void UnPackTo(BinaryPairT *_o, const flatbuffers::resolver_function_t *_resolver = nullptr) const;
-  static flatbuffers::Offset<BinaryPair> Pack(flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT* _o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
-};
-
-struct BinaryPairBuilder {
-  typedef BinaryPair Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_key(flatbuffers::Offset<flatbuffers::String> key) {
-    fbb_.AddOffset(BinaryPair::VT_KEY, key);
-  }
-  void add_value(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>>> value) {
-    fbb_.AddOffset(BinaryPair::VT_VALUE, value);
-  }
-  explicit BinaryPairBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  BinaryPairBuilder &operator=(const BinaryPairBuilder &);
-  flatbuffers::Offset<BinaryPair> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<BinaryPair>(end);
-    fbb_.Required(o, BinaryPair::VT_KEY);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<BinaryPair> CreateBinaryPair(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::String> key = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>>> value = 0) {
-  BinaryPairBuilder builder_(_fbb);
-  builder_.add_value(value);
-  builder_.add_key(key);
-  return builder_.Finish();
+inline BinaryPairT::BinaryPairT(const BinaryPairT &o)
+      : key(o.key) {
+  value.reserve(o.value.size());
+  for (const auto &value_ : o.value) { value.emplace_back((value_) ? new paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT(*value_) : nullptr); }
 }
 
-inline flatbuffers::Offset<BinaryPair> CreateBinaryPairDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const char *key = nullptr,
-    const std::vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> *value = nullptr) {
-  auto key__ = key ? _fbb.CreateString(key) : 0;
-  auto value__ = value ? _fbb.CreateVector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>>(*value) : 0;
-  return paddle::lite::fbs::opencl::proto::Cache_::CreateBinaryPair(
-      _fbb,
-      key__,
-      value__);
+inline BinaryPairT &BinaryPairT::operator=(BinaryPairT o) FLATBUFFERS_NOEXCEPT {
+  std::swap(key, o.key);
+  std::swap(value, o.value);
+  return *this;
 }
 
-flatbuffers::Offset<BinaryPair> CreateBinaryPair(flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT *_o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
-
-}  // namespace Cache_
-
-struct CacheT : public flatbuffers::NativeTable {
-  typedef Cache TableType;
-  std::vector<std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT>> binary_map;
-  CacheT() {
-  }
-};
-
-inline bool operator==(const CacheT &lhs, const CacheT &rhs) {
-  return
-      (lhs.binary_map == rhs.binary_map);
-}
-
-inline bool operator!=(const CacheT &lhs, const CacheT &rhs) {
-    return !(lhs == rhs);
-}
-
-
-struct Cache FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef CacheT NativeTableType;
-  typedef CacheBuilder Builder;
-  static const flatbuffers::TypeTable *MiniReflectTypeTable() {
-    return CacheTypeTable();
-  }
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_BINARY_MAP = 4
-  };
-  const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *binary_map() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *>(VT_BINARY_MAP);
-  }
-  flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *mutable_binary_map() {
-    return GetPointer<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *>(VT_BINARY_MAP);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffsetRequired(verifier, VT_BINARY_MAP) &&
-           verifier.VerifyVector(binary_map()) &&
-           verifier.VerifyVectorOfTables(binary_map()) &&
-           verifier.EndTable();
-  }
-  CacheT *UnPack(const flatbuffers::resolver_function_t *_resolver = nullptr) const;
-  void UnPackTo(CacheT *_o, const flatbuffers::resolver_function_t *_resolver = nullptr) const;
-  static flatbuffers::Offset<Cache> Pack(flatbuffers::FlatBufferBuilder &_fbb, const CacheT* _o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
-};
-
-struct CacheBuilder {
-  typedef Cache Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_binary_map(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>>> binary_map) {
-    fbb_.AddOffset(Cache::VT_BINARY_MAP, binary_map);
-  }
-  explicit CacheBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  CacheBuilder &operator=(const CacheBuilder &);
-  flatbuffers::Offset<Cache> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<Cache>(end);
-    fbb_.Required(o, Cache::VT_BINARY_MAP);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<Cache> CreateCache(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>>> binary_map = 0) {
-  CacheBuilder builder_(_fbb);
-  builder_.add_binary_map(binary_map);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<Cache> CreateCacheDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    std::vector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> *binary_map = nullptr) {
-  auto binary_map__ = binary_map ? _fbb.CreateVectorOfSortedTables<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>(binary_map) : 0;
-  return paddle::lite::fbs::opencl::proto::CreateCache(
-      _fbb,
-      binary_map__);
-}
-
-flatbuffers::Offset<Cache> CreateCache(flatbuffers::FlatBufferBuilder &_fbb, const CacheT *_o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
-
-namespace Cache_ {
-
-inline BinaryVectorT *BinaryVector::UnPack(const flatbuffers::resolver_function_t *_resolver) const {
-  std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT> _o = std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT>(new BinaryVectorT());
+inline BinaryPairT *BinaryPair::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<BinaryPairT>(new BinaryPairT());
   UnPackTo(_o.get(), _resolver);
   return _o.release();
 }
 
-inline void BinaryVector::UnPackTo(BinaryVectorT *_o, const flatbuffers::resolver_function_t *_resolver) const {
-  (void)_o;
-  (void)_resolver;
-  { auto _e = data(); if (_e) { _o->data.resize(_e->size()); for (flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->data[_i] = _e->Get(_i); } } }
-}
-
-inline flatbuffers::Offset<BinaryVector> BinaryVector::Pack(flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT* _o, const flatbuffers::rehasher_function_t *_rehasher) {
-  return CreateBinaryVector(_fbb, _o, _rehasher);
-}
-
-inline flatbuffers::Offset<BinaryVector> CreateBinaryVector(flatbuffers::FlatBufferBuilder &_fbb, const BinaryVectorT *_o, const flatbuffers::rehasher_function_t *_rehasher) {
-  (void)_rehasher;
-  (void)_o;
-  struct _VectorArgs { flatbuffers::FlatBufferBuilder *__fbb; const BinaryVectorT* __o; const flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
-  auto _data = _fbb.CreateVector(_o->data);
-  return paddle::lite::fbs::opencl::proto::Cache_::CreateBinaryVector(
-      _fbb,
-      _data);
-}
-
-inline BinaryPairT *BinaryPair::UnPack(const flatbuffers::resolver_function_t *_resolver) const {
-  std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT> _o = std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT>(new BinaryPairT());
-  UnPackTo(_o.get(), _resolver);
-  return _o.release();
-}
-
-inline void BinaryPair::UnPackTo(BinaryPairT *_o, const flatbuffers::resolver_function_t *_resolver) const {
+inline void BinaryPair::UnPackTo(BinaryPairT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
   (void)_o;
   (void)_resolver;
   { auto _e = key(); if (_e) _o->key = _e->str(); }
-  { auto _e = value(); if (_e) { _o->value.resize(_e->size()); for (flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->value[_i] = std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT>(_e->Get(_i)->UnPack(_resolver)); } } }
+  { auto _e = value(); if (_e) { _o->value.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { if(_o->value[_i]) { _e->Get(_i)->UnPackTo(_o->value[_i].get(), _resolver); } else { _o->value[_i] = std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorT>(_e->Get(_i)->UnPack(_resolver)); } } } else { _o->value.resize(0); } }
 }
 
-inline flatbuffers::Offset<BinaryPair> BinaryPair::Pack(flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT* _o, const flatbuffers::rehasher_function_t *_rehasher) {
+inline ::flatbuffers::Offset<BinaryPair> BinaryPair::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
   return CreateBinaryPair(_fbb, _o, _rehasher);
 }
 
-inline flatbuffers::Offset<BinaryPair> CreateBinaryPair(flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT *_o, const flatbuffers::rehasher_function_t *_rehasher) {
+inline ::flatbuffers::Offset<BinaryPair> CreateBinaryPair(::flatbuffers::FlatBufferBuilder &_fbb, const BinaryPairT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
   (void)_rehasher;
   (void)_o;
-  struct _VectorArgs { flatbuffers::FlatBufferBuilder *__fbb; const BinaryPairT* __o; const flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const BinaryPairT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
   auto _key = _fbb.CreateString(_o->key);
-  auto _value = _fbb.CreateVector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> (_o->value.size(), [](size_t i, _VectorArgs *__va) { return CreateBinaryVector(*__va->__fbb, __va->__o->value[i].get(), __va->__rehasher); }, &_va );
+  auto _value = _fbb.CreateVector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryVector>> (_o->value.size(), [](size_t i, _VectorArgs *__va) { return CreateBinaryVector(*__va->__fbb, __va->__o->value[i].get(), __va->__rehasher); }, &_va );
   return paddle::lite::fbs::opencl::proto::Cache_::CreateBinaryPair(
       _fbb,
       _key,
@@ -383,27 +399,48 @@ inline flatbuffers::Offset<BinaryPair> CreateBinaryPair(flatbuffers::FlatBufferB
 
 }  // namespace Cache_
 
-inline CacheT *Cache::UnPack(const flatbuffers::resolver_function_t *_resolver) const {
-  std::unique_ptr<paddle::lite::fbs::opencl::proto::CacheT> _o = std::unique_ptr<paddle::lite::fbs::opencl::proto::CacheT>(new CacheT());
+
+inline bool operator==(const CacheT &lhs, const CacheT &rhs) {
+  return
+      (lhs.binary_map.size() == rhs.binary_map.size() && std::equal(lhs.binary_map.cbegin(), lhs.binary_map.cend(), rhs.binary_map.cbegin(), [](std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT> const &a, std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT> const &b) { return (a == b) || (a && b && *a == *b); }));
+}
+
+inline bool operator!=(const CacheT &lhs, const CacheT &rhs) {
+    return !(lhs == rhs);
+}
+
+
+inline CacheT::CacheT(const CacheT &o) {
+  binary_map.reserve(o.binary_map.size());
+  for (const auto &binary_map_ : o.binary_map) { binary_map.emplace_back((binary_map_) ? new paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT(*binary_map_) : nullptr); }
+}
+
+inline CacheT &CacheT::operator=(CacheT o) FLATBUFFERS_NOEXCEPT {
+  std::swap(binary_map, o.binary_map);
+  return *this;
+}
+
+inline CacheT *Cache::UnPack(const ::flatbuffers::resolver_function_t *_resolver) const {
+  auto _o = std::unique_ptr<CacheT>(new CacheT());
   UnPackTo(_o.get(), _resolver);
   return _o.release();
 }
 
-inline void Cache::UnPackTo(CacheT *_o, const flatbuffers::resolver_function_t *_resolver) const {
+inline void Cache::UnPackTo(CacheT *_o, const ::flatbuffers::resolver_function_t *_resolver) const {
   (void)_o;
   (void)_resolver;
-  { auto _e = binary_map(); if (_e) { _o->binary_map.resize(_e->size()); for (flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->binary_map[_i] = std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT>(_e->Get(_i)->UnPack(_resolver)); } } }
+  { auto _e = binary_map(); if (_e) { _o->binary_map.resize(_e->size()); for (::flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { if(_o->binary_map[_i]) { _e->Get(_i)->UnPackTo(_o->binary_map[_i].get(), _resolver); } else { _o->binary_map[_i] = std::unique_ptr<paddle::lite::fbs::opencl::proto::Cache_::BinaryPairT>(_e->Get(_i)->UnPack(_resolver)); } } } else { _o->binary_map.resize(0); } }
 }
 
-inline flatbuffers::Offset<Cache> Cache::Pack(flatbuffers::FlatBufferBuilder &_fbb, const CacheT* _o, const flatbuffers::rehasher_function_t *_rehasher) {
+inline ::flatbuffers::Offset<Cache> Cache::Pack(::flatbuffers::FlatBufferBuilder &_fbb, const CacheT* _o, const ::flatbuffers::rehasher_function_t *_rehasher) {
   return CreateCache(_fbb, _o, _rehasher);
 }
 
-inline flatbuffers::Offset<Cache> CreateCache(flatbuffers::FlatBufferBuilder &_fbb, const CacheT *_o, const flatbuffers::rehasher_function_t *_rehasher) {
+inline ::flatbuffers::Offset<Cache> CreateCache(::flatbuffers::FlatBufferBuilder &_fbb, const CacheT *_o, const ::flatbuffers::rehasher_function_t *_rehasher) {
   (void)_rehasher;
   (void)_o;
-  struct _VectorArgs { flatbuffers::FlatBufferBuilder *__fbb; const CacheT* __o; const flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
-  auto _binary_map = _fbb.CreateVector<flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> (_o->binary_map.size(), [](size_t i, _VectorArgs *__va) { return CreateBinaryPair(*__va->__fbb, __va->__o->binary_map[i].get(), __va->__rehasher); }, &_va );
+  struct _VectorArgs { ::flatbuffers::FlatBufferBuilder *__fbb; const CacheT* __o; const ::flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
+  auto _binary_map = _fbb.CreateVector<::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache_::BinaryPair>> (_o->binary_map.size(), [](size_t i, _VectorArgs *__va) { return CreateBinaryPair(*__va->__fbb, __va->__o->binary_map[i].get(), __va->__rehasher); }, &_va );
   return paddle::lite::fbs::opencl::proto::CreateCache(
       _fbb,
       _binary_map);
@@ -411,98 +448,102 @@ inline flatbuffers::Offset<Cache> CreateCache(flatbuffers::FlatBufferBuilder &_f
 
 namespace Cache_ {
 
-inline const flatbuffers::TypeTable *BinaryVectorTypeTable() {
-  static const flatbuffers::TypeCode type_codes[] = {
-    { flatbuffers::ET_UCHAR, 1, -1 }
+inline const ::flatbuffers::TypeTable *BinaryVectorTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_UCHAR, 1, -1 }
   };
   static const char * const names[] = {
     "data"
   };
-  static const flatbuffers::TypeTable tt = {
-    flatbuffers::ST_TABLE, 1, type_codes, nullptr, nullptr, names
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 1, type_codes, nullptr, nullptr, nullptr, names
   };
   return &tt;
 }
 
-inline const flatbuffers::TypeTable *BinaryPairTypeTable() {
-  static const flatbuffers::TypeCode type_codes[] = {
-    { flatbuffers::ET_STRING, 0, -1 },
-    { flatbuffers::ET_SEQUENCE, 1, 0 }
+inline const ::flatbuffers::TypeTable *BinaryPairTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_STRING, 0, -1 },
+    { ::flatbuffers::ET_SEQUENCE, 1, 0 }
   };
-  static const flatbuffers::TypeFunction type_refs[] = {
+  static const ::flatbuffers::TypeFunction type_refs[] = {
     paddle::lite::fbs::opencl::proto::Cache_::BinaryVectorTypeTable
   };
   static const char * const names[] = {
     "key",
     "value"
   };
-  static const flatbuffers::TypeTable tt = {
-    flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, names
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 2, type_codes, type_refs, nullptr, nullptr, names
   };
   return &tt;
 }
 
 }  // namespace Cache_
 
-inline const flatbuffers::TypeTable *CacheTypeTable() {
-  static const flatbuffers::TypeCode type_codes[] = {
-    { flatbuffers::ET_SEQUENCE, 1, 0 }
+inline const ::flatbuffers::TypeTable *CacheTypeTable() {
+  static const ::flatbuffers::TypeCode type_codes[] = {
+    { ::flatbuffers::ET_SEQUENCE, 1, 0 }
   };
-  static const flatbuffers::TypeFunction type_refs[] = {
+  static const ::flatbuffers::TypeFunction type_refs[] = {
     paddle::lite::fbs::opencl::proto::Cache_::BinaryPairTypeTable
   };
   static const char * const names[] = {
     "binary_map"
   };
-  static const flatbuffers::TypeTable tt = {
-    flatbuffers::ST_TABLE, 1, type_codes, type_refs, nullptr, names
+  static const ::flatbuffers::TypeTable tt = {
+    ::flatbuffers::ST_TABLE, 1, type_codes, type_refs, nullptr, nullptr, names
   };
   return &tt;
 }
 
 inline const paddle::lite::fbs::opencl::proto::Cache *GetCache(const void *buf) {
-  return flatbuffers::GetRoot<paddle::lite::fbs::opencl::proto::Cache>(buf);
+  return ::flatbuffers::GetRoot<paddle::lite::fbs::opencl::proto::Cache>(buf);
 }
 
 inline const paddle::lite::fbs::opencl::proto::Cache *GetSizePrefixedCache(const void *buf) {
-  return flatbuffers::GetSizePrefixedRoot<paddle::lite::fbs::opencl::proto::Cache>(buf);
+  return ::flatbuffers::GetSizePrefixedRoot<paddle::lite::fbs::opencl::proto::Cache>(buf);
 }
 
 inline Cache *GetMutableCache(void *buf) {
-  return flatbuffers::GetMutableRoot<Cache>(buf);
+  return ::flatbuffers::GetMutableRoot<Cache>(buf);
+}
+
+inline paddle::lite::fbs::opencl::proto::Cache *GetMutableSizePrefixedCache(void *buf) {
+  return ::flatbuffers::GetMutableSizePrefixedRoot<paddle::lite::fbs::opencl::proto::Cache>(buf);
 }
 
 inline bool VerifyCacheBuffer(
-    flatbuffers::Verifier &verifier) {
+    ::flatbuffers::Verifier &verifier) {
   return verifier.VerifyBuffer<paddle::lite::fbs::opencl::proto::Cache>(nullptr);
 }
 
 inline bool VerifySizePrefixedCacheBuffer(
-    flatbuffers::Verifier &verifier) {
+    ::flatbuffers::Verifier &verifier) {
   return verifier.VerifySizePrefixedBuffer<paddle::lite::fbs::opencl::proto::Cache>(nullptr);
 }
 
 inline void FinishCacheBuffer(
-    flatbuffers::FlatBufferBuilder &fbb,
-    flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache> root) {
+    ::flatbuffers::FlatBufferBuilder &fbb,
+    ::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache> root) {
   fbb.Finish(root);
 }
 
 inline void FinishSizePrefixedCacheBuffer(
-    flatbuffers::FlatBufferBuilder &fbb,
-    flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache> root) {
+    ::flatbuffers::FlatBufferBuilder &fbb,
+    ::flatbuffers::Offset<paddle::lite::fbs::opencl::proto::Cache> root) {
   fbb.FinishSizePrefixed(root);
 }
 
 inline std::unique_ptr<paddle::lite::fbs::opencl::proto::CacheT> UnPackCache(
     const void *buf,
-    const flatbuffers::resolver_function_t *res = nullptr) {
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
   return std::unique_ptr<paddle::lite::fbs::opencl::proto::CacheT>(GetCache(buf)->UnPack(res));
 }
 
 inline std::unique_ptr<paddle::lite::fbs::opencl::proto::CacheT> UnPackSizePrefixedCache(
     const void *buf,
-    const flatbuffers::resolver_function_t *res = nullptr) {
+    const ::flatbuffers::resolver_function_t *res = nullptr) {
   return std::unique_ptr<paddle::lite::fbs::opencl::proto::CacheT>(GetSizePrefixedCache(buf)->UnPack(res));
 }
 
