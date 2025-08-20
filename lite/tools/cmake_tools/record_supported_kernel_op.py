@@ -17,10 +17,10 @@ from __future__ import print_function
 import sys
 import os
 import logging
-from ast import RegisterLiteKernelParser
-from ast import RegisterLiteOpParser
-from ast import RegisterSubgraphBridgeParser
-from ast import RegisterNNadapterBridgeParser
+from lite_ast import RegisterLiteKernelParser
+from lite_ast import RegisterLiteOpParser
+from lite_ast import RegisterSubgraphBridgeParser
+from lite_ast import RegisterNNadapterBridgeParser
 
 if len(sys.argv) != 6:
     print("Error: record_supported_kernel_op.py requires five inputs!")
