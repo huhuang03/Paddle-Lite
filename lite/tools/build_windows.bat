@@ -28,6 +28,7 @@ set THIRDPARTY_TAR=third-party-651c7c4.tar.gz
 
 set workspace=%source_path%
 set /a cores=%number_of_processors%-2 > null
+set CONFIG_FILE=%~dp0local_paths.txt
 
 :round
 @echo off
@@ -83,6 +84,7 @@ if "%WITH_PYTHON%"=="ON" (
     set BUILD_EXTRA=ON
 )
 
+
 cd "%workspace%"
 
 echo "------------------------------------------------------------------------------------------------------|"
@@ -103,20 +105,36 @@ echo "|  WITH_KUNLUNXIN_XPU=%WITH_KUNLUNXIN_XPU%                                
 echo "|  KUNLUNXIN_XPU_SDK_ROOT=%KUNLUNXIN_XPU_SDK_ROOT%                                                    |"
 echo "------------------------------------------------------------------------------------------------------|"
 
-
-set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-if "%CMAKE_GENERATOR%"=="Visual Studio 14 2015" (
-  set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-) else if "%CMAKE_GENERATOR%"=="Visual Studio 15 2017" (
-  set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-) else if "%CMAKE_GENERATOR%"=="Visual Studio 16 2019" (
-  set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
-)
-IF NOT EXIST "%vcvarsall_dir%" (
-  call:set_vcvarsall_dir
+if exist "%CONFIG_FILE%" (
+    for /f "usebackq tokens=1,* delims==" %%A in ("%CONFIG_FILE%") do (
+        if /i "%%A"=="VCVARSALL_DIR" set vcvarsall_dir=%%B
+        if /i "%%A"=="PYTHON_PATH" set python_path=%%B
+    )
 )
 
-call:set_python_path
+if not exist "%vcvarsall_dir%" (
+    set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    if "%CMAKE_GENERATOR%"=="Visual Studio 14 2015" (
+        set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    ) else if "%CMAKE_GENERATOR%"=="Visual Studio 15 2017" (
+        set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    ) else if "%CMAKE_GENERATOR%"=="Visual Studio 16 2019" (
+        set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
+    )
+    IF NOT EXIST "%vcvarsall_dir%" (
+        call:set_vcvarsall_dir
+    )
+)
+
+
+if not exist "%python_path%" (
+    call:set_python_path
+)
+
+(
+    echo VCVARSALL_DIR=%vcvarsall_dir%
+    echo PYTHON_PATH=%python_path%
+) > "%CONFIG_FILE%"
 
 call:prepare_thirdparty
 
