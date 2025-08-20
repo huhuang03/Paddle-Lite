@@ -113,7 +113,7 @@ if "%CMAKE_GENERATOR%"=="Visual Studio 14 2015" (
   set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
 )
 IF NOT EXIST "%vcvarsall_dir%" (
-  goto set_vcvarsall_dir
+  call:set_vcvarsall_dir
 )
 
 call:set_python_path
@@ -295,6 +295,7 @@ IF NOT EXIST "%vcvarsall_dir%" (
     goto:eof
 )
 goto:eof
+
 
 :set_python_path
 set python_path=C:\Python35\python.exe
