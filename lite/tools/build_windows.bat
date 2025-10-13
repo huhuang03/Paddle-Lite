@@ -19,7 +19,7 @@ set WITH_AVX=ON
 set WITH_KUNLUNXIN_XPU=OFF
 set KUNLUNXIN_XPU_SDK_ROOT=""
 set BUILD_TYPE=Release
-set CMAKE_GENERATOR=Visual Studio 14 2015
+set CMAKE_GENERATOR=Visual Studio 17 2022
 set ARCH=""
 set WITH_STRIP=OFF
 set OPTMODEL_DIR=""
@@ -53,6 +53,8 @@ if /I "%1"=="with_extra" (
     set CMAKE_GENERATOR=Visual Studio 15 2017
 ) else if /I  "%1"=="use_vs2019" (
     set CMAKE_GENERATOR=Visual Studio 16 2019
+) else if /I  "%1"=="use_vs2022" (
+    set CMAKE_GENERATOR=Visual Studio 17 2022
 ) else if /I  "%1"=="with_dynamic_crt" (
     set MSVC_STATIC_CRT=OFF
 ) else if /I  "%1"=="with_static_mkl" (
@@ -120,6 +122,8 @@ if not exist "%vcvarsall_dir%" (
         set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
     ) else if "%CMAKE_GENERATOR%"=="Visual Studio 16 2019" (
         set vcvarsall_dir=C:\Program Files ^(x86^)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
+    ) else if "%CMAKE_GENERATOR%"=="Visual Studio 17 2022" (
+        set vcvarsall_dir=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat
     )
     IF NOT EXIST "%vcvarsall_dir%" (
         call:set_vcvarsall_dir
@@ -378,6 +382,7 @@ echo "|      without_avx: Enable AVX or SSE for X86 kernels. Default is ON.     
 echo "|      use_ninja: Enable ninja build. Default is OFF.                                                 |"
 echo "|      use_vs2017: Enable visual studio 2017 build. Default is OFF.                                   |"
 echo "|      use_vs2019: Enable visual studio 2019 build. Default is OFF.                                   |"
+echo "|      use_vs2022: Enable visual studio 2022 build. Default is ON.                                   |"
 echo "|  for example:                                                                                       |"
 echo "|      build_windows.bat with_log with_profile with_python with_extra                                 |"
 echo "|      build_windows.bat build_x86 with_strip D:\Paddle-Lite\opt_model_dir                            |"
