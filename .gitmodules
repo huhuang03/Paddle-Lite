@@ -16,3 +16,6 @@
 [submodule "third-party/pybind"]
 	path = third-party/pybind
 	url = https://github.com/pybind/pybind11.git
+[submodule "third-party/paddlelite-dirent"]
+	path = third-party/paddlelite-dirent
+	url = git@github.com:huhuang03/paddlelite-dirent.git
