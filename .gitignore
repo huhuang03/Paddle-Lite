@@ -124,3 +124,6 @@ third-party/*
 
 # hiai libs
 ai_ddk_lib*
+
+
+CMakeUserPresets.json
